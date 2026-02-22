@@ -2,7 +2,7 @@
 
 > Curated Claude Code skills — drop-in behaviors for your AI assistant
 
-**[Browse skills →](https://cesaraethos.github.io/aria-superpowers)**
+**[Browse skills →](https://chidekina.github.io/aria-superpowers)**
 
 Skills extend [Claude Code](https://claude.ai/claude-code) with specialized knowledge and workflows. Drop a skill directory into `~/.claude/skills/` and Claude will use it automatically based on trigger phrases or context.
 
@@ -13,14 +13,14 @@ Skills extend [Claude Code](https://claude.ai/claude-code) with specialized know
 ### Clone and install specific skills (recommended)
 
 ```bash
-git clone https://github.com/cesaraethos/aria-superpowers.git
+git clone https://github.com/chidekina/aria-superpowers.git
 ./aria-superpowers/install.sh commit frontend-design react-dev
 ```
 
 ### Install everything
 
 ```bash
-git clone https://github.com/cesaraethos/aria-superpowers.git
+git clone https://github.com/chidekina/aria-superpowers.git
 ./aria-superpowers/install.sh
 ```
 
