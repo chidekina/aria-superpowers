@@ -1,0 +1,32 @@
+name: Skill Request
+description: Request a new skill for the collection
+labels: ["skill-request"]
+body:
+  - type: input
+    id: name
+    attributes:
+      label: Skill name
+      placeholder: e.g. docker-compose
+    validations:
+      required: true
+  - type: textarea
+    id: usecase
+    attributes:
+      label: Use case
+      description: What problem does this skill solve? When would you use it?
+    validations:
+      required: true
+  - type: textarea
+    id: trigger
+    attributes:
+      label: Example prompt
+      description: What would you type to Claude to trigger this skill?
+      placeholder: '"Set up a docker-compose file for my Node.js + Postgres app"'
+    validations:
+      required: true
+  - type: input
+    id: requires
+    attributes:
+      label: External dependencies
+      description: Any tools this skill would need (e.g. docker, ollama)
+      placeholder: docker

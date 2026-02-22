@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARIA Superpowers — Claude Code Skills</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #0d1117; color: #e6edf3; min-height: 100vh; }
+    header { padding: 3rem 2rem 2rem; text-align: center; border-bottom: 1px solid #21262d; }
+    header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    header p { color: #8b949e; max-width: 520px; margin: 0 auto 1.5rem; }
+    .install-hint { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 0.6rem 1rem; font-family: monospace; font-size: 0.85rem; color: #79c0ff; display: inline-block; cursor: pointer; transition: border-color 0.15s; }
+    .install-hint:hover { border-color: #58a6ff; }
+    .controls { padding: 1.5rem 2rem; display: flex; gap: 1rem; flex-wrap: wrap; max-width: 1200px; margin: 0 auto; }
+    input[type=search] { flex: 1; min-width: 200px; background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 0.5rem 1rem; color: #e6edf3; font-size: 0.95rem; outline: none; }
+    input[type=search]:focus { border-color: #58a6ff; }
+    .filters { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+    .filter-btn { background: #21262d; border: 1px solid #30363d; border-radius: 20px; padding: 0.3rem 0.8rem; color: #8b949e; font-size: 0.8rem; cursor: pointer; transition: all 0.15s; }
+    .filter-btn.active, .filter-btn:hover { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; padding: 0 2rem 3rem; max-width: 1200px; margin: 0 auto; }
+    .card { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 1.2rem; transition: border-color 0.15s; }
+    .card:hover { border-color: #58a6ff; }
+    .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.6rem; }
+    .card-name { font-weight: 600; font-size: 1rem; color: #79c0ff; font-family: monospace; }
+    .card-trigger { background: #0d419d; color: #79c0ff; border-radius: 4px; padding: 0.15rem 0.4rem; font-size: 0.75rem; font-family: monospace; white-space: nowrap; }
+    .card-auto { background: #1c2128; color: #8b949e; border-radius: 4px; padding: 0.15rem 0.4rem; font-size: 0.75rem; }
+    .card-desc { color: #8b949e; font-size: 0.85rem; line-height: 1.5; margin-bottom: 0.8rem; }
+    .tags { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+    .tag { background: #21262d; color: #8b949e; border-radius: 4px; padding: 0.15rem 0.4rem; font-size: 0.72rem; }
+    .requires { margin-top: 0.5rem; font-size: 0.75rem; color: #f0883e; }
+    .empty { text-align: center; color: #8b949e; padding: 4rem; grid-column: 1/-1; }
+    footer { text-align: center; color: #484f58; font-size: 0.8rem; padding: 2rem; border-top: 1px solid #21262d; }
+    footer a { color: #58a6ff; text-decoration: none; }
+    .count { color: #484f58; font-size: 0.8rem; padding: 0 2rem; max-width: 1200px; margin: 0 auto 0.5rem; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>⚡ ARIA Superpowers</h1>
+    <p>Curated Claude Code skills — drop-in behaviors for your AI assistant</p>
+    <code class="install-hint" title="Click to copy" onclick="copyInstall(this)">
+      git clone https://github.com/cesaraethos/aria-superpowers.git && ./aria-superpowers/install.sh
+    </code>
+  </header>
+
+  <div class="controls">
+    <input type="search" id="search" placeholder="Search skills..." oninput="render()">
+    <div class="filters" id="filters"></div>
+  </div>
+  <div class="count" id="count"></div>
+  <div class="grid" id="grid"></div>
+
+  <footer>
+    <a href="https://github.com/cesaraethos/aria-superpowers">GitHub</a> ·
+    <a href="https://github.com/cesaraethos/aria-superpowers/blob/main/SKILL_SPEC.md">Write a Skill</a> ·
+    CC BY 4.0 · Built for <a href="https://claude.ai/claude-code">Claude Code</a>
+  </footer>
+
+  <script>
+    let skills = [];
+    let activeCategory = 'all';
+
+    async function load() {
+      try {
+        const res = await fetch('../skills.json');
+        skills = await res.json();
+      } catch {
+        // fallback for local dev
+        skills = [];
+        document.getElementById('grid').innerHTML = '<div class="empty">Could not load skills.json — open via GitHub Pages.</div>';
+        return;
+      }
+      buildFilters();
+      render();
+    }
+
+    function buildFilters() {
+      const cats = ['all', ...new Set(skills.map(s => s.category))];
+      document.getElementById('filters').innerHTML = cats.map(c =>
+        `<button class="filter-btn ${c === 'all' ? 'active' : ''}" onclick="setFilter('${c}', this)">${c}</button>`
+      ).join('');
+    }
+
+    function setFilter(cat, btn) {
+      activeCategory = cat;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      render();
+    }
+
+    function render() {
+      const q = document.getElementById('search').value.toLowerCase().trim();
+      const filtered = skills.filter(s => {
+        const matchCat = activeCategory === 'all' || s.category === activeCategory;
+        const matchQ = !q || s.name.includes(q) || s.description.toLowerCase().includes(q) || s.tags.some(t => t.includes(q));
+        return matchCat && matchQ;
+      });
+
+      document.getElementById('count').textContent = `${filtered.length} skill${filtered.length !== 1 ? 's' : ''}`;
+
+      const grid = document.getElementById('grid');
+      if (!filtered.length) {
+        grid.innerHTML = '<div class="empty">No skills match your search.</div>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(s => `
+        <div class="card">
+          <div class="card-header">
+            <span class="card-name">${s.name}</span>
+            ${s.trigger
+              ? `<span class="card-trigger">${s.trigger}</span>`
+              : `<span class="card-auto">auto</span>`}
+          </div>
+          <div class="card-desc">${s.description}</div>
+          <div class="tags">${s.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+          ${s.requires.length ? `<div class="requires">requires: ${s.requires.join(', ')}</div>` : ''}
+        </div>
+      `).join('');
+    }
+
+    function copyInstall(el) {
+      navigator.clipboard.writeText('git clone https://github.com/cesaraethos/aria-superpowers.git && ./aria-superpowers/install.sh').then(() => {
+        const orig = el.textContent;
+        el.textContent = '✅ Copied!';
+        setTimeout(() => el.textContent = orig, 1500);
+      });
+    }
+
+    load();
+  </script>
+</body>
+</html>
