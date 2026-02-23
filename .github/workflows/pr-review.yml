@@ -1,0 +1,74 @@
+name: PR Review
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get changed files
+        id: changed
+        run: |
+          git diff --name-only origin/main...HEAD > /tmp/changed-files.txt
+          echo "Changed files:"
+          cat /tmp/changed-files.txt
+
+      - name: Run PR review script
+        run: node .github/scripts/review-pr.js
+        env:
+          CHANGED_FILES_PATH: /tmp/changed-files.txt
+          REPO_ROOT: ${{ github.workspace }}
+
+      - name: Post PR comment
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [ ! -f /tmp/review-result.json ]; then
+            echo "No review result found, skipping comment"
+            exit 0
+          fi
+
+          PASSED=$(node -e "const r=require('/tmp/review-result.json'); console.log(r.passed)")
+          BODY=$(node -e "
+            const r = require('/tmp/review-result.json');
+            const lines = [];
+            if (r.passed) {
+              lines.push('## ✅ Skill Submission Review Passed');
+              lines.push('');
+              lines.push('All automated checks passed — ready for maintainer review.');
+            } else {
+              lines.push('## ❌ Skill Submission Review Failed');
+              lines.push('');
+              lines.push('The following issues were found:');
+              lines.push('');
+              r.issues.forEach(i => lines.push('- ❌ **' + i.rule + '**: ' + i.message));
+            }
+            if (r.warnings && r.warnings.length > 0) {
+              lines.push('');
+              lines.push('**Warnings:**');
+              r.warnings.forEach(w => lines.push('- ⚠️ ' + w));
+            }
+            lines.push('');
+            lines.push('---');
+            lines.push('See [SKILL_SPEC.md](https://github.com/' + process.env.REPO + '/blob/main/SKILL_SPEC.md) for submission guidelines.');
+            console.log(lines.join('\n'));
+          ")
+
+          gh pr comment "$PR_NUMBER" \
+            --repo "$REPO" \
+            --body "$BODY"
