@@ -226,5 +226,14 @@
     "requires": ["react"],
     "user-invocable": true,
     "trigger": "/react-antd-setup"
-  }
+  },
+  {
+  "name": "agile-task-analyzer",
+  "description": "Analisa uma tarefa e a decompõe em subtarefas ágeis, recomendando o framework mais adequado",
+  "category": "planning",
+  "tags": ["agile", "scrum", "kanban", "planning"],
+  "requires": [],
+  "user-invocable": true,
+  "trigger": "/agile-task"
+}
 ]
