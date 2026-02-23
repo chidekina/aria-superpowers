@@ -58,6 +58,9 @@
     .btn-cancel:hover { border-color: #8b949e; color: #e6edf3; }
     .btn-open-gh { background: #238636; border: none; border-radius: 6px; padding: 0.55rem 1.2rem; color: #fff; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: background 0.15s; }
     .btn-open-gh:hover { background: #2ea043; }
+    .lang-toggle { display: flex; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; overflow: hidden; }
+    .lang-btn { background: none; border: none; padding: 0.3rem 0.65rem; color: #8b949e; font-size: 0.78rem; cursor: pointer; transition: all 0.15s; }
+    .lang-btn.active { background: #21262d; color: #e6edf3; }
     @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
   </style>
 </head>
@@ -91,9 +94,16 @@
     <div class="modal">
       <div class="modal-header">
         <h3>✨ Submit a Skill</h3>
-        <button class="modal-close" onclick="closeModal()">✕</button>
+        <div style="display:flex;align-items:center;gap:0.5rem;">
+          <div class="lang-toggle">
+            <button id="lang-en" class="lang-btn active" onclick="setLang('en')">🇺🇸 EN</button>
+            <button id="lang-pt" class="lang-btn" onclick="setLang('pt')">🇧🇷 PT</button>
+          </div>
+          <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
       </div>
-      <p class="modal-subtitle">Fill in the details and click "Open on GitHub" — a pre-filled issue will open. You'll need a GitHub account to submit.</p>
+      <p class="modal-subtitle" id="modal-subtitle-en">Fill in the details and click "Open on GitHub" — a pre-filled issue will open. You'll need a GitHub account to submit. Need help? See the <a href="https://github.com/chidekina/aria-superpowers/blob/main/CONTRIBUTING.md" target="_blank" style="color:#58a6ff">Contributing guide</a>.</p>
+      <p class="modal-subtitle" id="modal-subtitle-pt" style="display:none">Preencha os campos e clique em "Abrir no GitHub" — uma issue já preenchida vai abrir. Você precisa de uma conta no GitHub para enviar. Precisa de ajuda? Veja o <a href="https://github.com/chidekina/aria-superpowers/blob/main/CONTRIBUTING.pt-br.md" target="_blank" style="color:#58a6ff">guia passo a passo em português</a>.</p>
 
       <div class="form-row">
         <div class="form-group">
@@ -226,6 +236,13 @@ user-invocable: true
         el.textContent = '✅ Copied!';
         setTimeout(() => el.textContent = orig, 1500);
       });
+    }
+
+    function setLang(lang) {
+      document.getElementById('modal-subtitle-en').style.display = lang === 'en' ? '' : 'none';
+      document.getElementById('modal-subtitle-pt').style.display = lang === 'pt' ? '' : 'none';
+      document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+      document.getElementById('lang-pt').classList.toggle('active', lang === 'pt');
     }
 
     function openModal() {
