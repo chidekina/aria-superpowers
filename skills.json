@@ -208,7 +208,8 @@
   ],
   "user-invocable": true,
   "trigger": "/test"
-}
+},
+{
     "name": "java-boilerplate",
     "description": "Gera automaticamente getters, setters, construtores, toString, equals e hashCode para classes Java",
     "category": "backend",
@@ -216,5 +217,26 @@
     "requires": ["java"],
     "user-invocable": true,
     "trigger": "/java-boilerplate"
-  }
+  },
+  {
+  "name": "translate-requirements",
+  "description": "Extrai requisitos técnicos do Jira, Trello ou ClickUp e converte em formato estruturado pronto para agentes de IA (PRD ou tasks).",
+  "category": "ai-automation",
+  "tags": [
+    "requirements",
+    "jira",
+    "trello",
+    "clickup",
+    "automation",
+    "prd",
+    "ai-agent"
+  ],
+  "requires": [
+    "python",
+    "requests",
+    "jira-api | trello-api | clickup-api"
+  ],
+  "user-invocable": true,
+  "trigger": "/requirements"
+}
 ]
