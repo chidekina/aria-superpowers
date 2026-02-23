@@ -27,7 +27,7 @@ Use when transforming ideas, projects, or existing code into structured prompts.
 
 Manual invocation:
 
-/modelar-prompt
+/prompt-modeler
 
 Execution always begins with the Mandatory Gate (Stage 0).
 
