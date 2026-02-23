@@ -187,5 +187,26 @@
     "requires": [],
     "user-invocable": true,
     "trigger": "/token-saver"
-  }
+  },
+  {
+  "name": "generate-tests",
+  "description": "Gera automaticamente testes unitários ou de integração para projetos JavaScript e TypeScript com Jest ou Vitest, incluindo mocks inteligentes e suporte a meta de cobertura.",
+  "category": "testing",
+  "tags": [
+    "javascript",
+    "typescript",
+    "jest",
+    "vitest",
+    "testing",
+    "qa",
+    "automation",
+    "coverage"
+  ],
+  "requires": [
+    "node",
+    "jest|vitest"
+  ],
+  "user-invocable": true,
+  "trigger": "/test"
+}
 ]
