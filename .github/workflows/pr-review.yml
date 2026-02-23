@@ -1,0 +1,85 @@
+name: PR Review
+
+on:
+  pull_request_target:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout base repo (trusted script source)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # Checks out the base branch HEAD — NOT the fork's code.
+          # This ensures .github/scripts/review-pr.js is always the trusted version.
+          ref: ${{ github.event.pull_request.base.ref }}
+
+      - name: Save trusted review script
+        run: cp .github/scripts/review-pr.js /tmp/trusted-review-pr.js
+
+      - name: Fetch PR changes
+        run: |
+          git fetch origin pull/${{ github.event.pull_request.number }}/head:pr-head
+          git diff origin/main...pr-head --name-only > /tmp/changed-files.txt
+          echo "Changed files:"
+          cat /tmp/changed-files.txt
+
+      - name: Overlay PR files for content validation
+        run: |
+          # Apply only skills/ and skills.json from the PR into the workspace
+          # so the trusted script can read their content.
+          git checkout pr-head -- skills/ skills.json 2>/dev/null || true
+
+      - name: Run PR review script
+        run: node /tmp/trusted-review-pr.js
+        env:
+          CHANGED_FILES_PATH: /tmp/changed-files.txt
+          REPO_ROOT: ${{ github.workspace }}
+
+      - name: Post PR comment
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [ ! -f /tmp/review-result.json ]; then
+            echo "No review result found, skipping comment"
+            exit 0
+          fi
+
+          BODY=$(node -e "
+            const r = require('/tmp/review-result.json');
+            const lines = [];
+            if (r.passed) {
+              lines.push('## \u2705 Skill Submission Review Passed');
+              lines.push('');
+              lines.push('All automated checks passed \u2014 ready for maintainer review.');
+            } else {
+              lines.push('## \u274c Skill Submission Review Failed');
+              lines.push('');
+              lines.push('The following issues were found:');
+              lines.push('');
+              r.issues.forEach(i => lines.push('- \u274c **' + i.rule + '**: ' + i.message));
+            }
+            if (r.warnings && r.warnings.length > 0) {
+              lines.push('');
+              lines.push('**Warnings:**');
+              r.warnings.forEach(w => lines.push('- \u26a0\ufe0f ' + w));
+            }
+            lines.push('');
+            lines.push('---');
+            lines.push('See [SKILL_SPEC.md](https://github.com/' + process.env.REPO + '/blob/main/SKILL_SPEC.md) for submission guidelines.');
+            process.stdout.write(lines.join('\n'));
+          ")
+
+          gh pr comment "$PR_NUMBER" \
+            --repo "$REPO" \
+            --body "$BODY"
