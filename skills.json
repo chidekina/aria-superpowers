@@ -278,18 +278,16 @@
     "trigger": "/token-saver"
   },
   {
-    "name": "skill-converter-modeler",
-    "description": "Converts vague ideas into structured, operational SKILL specifications with technical rigor and deterministic modeling.",
-    "category": "architecture",
+    "name": "prompt-modeler",
+    "description": "Generate structured strategic prompts with diagnostic and multiple options.",
+    "category": "meta",
     "tags": [
       "prompt-engineering",
-      "skill-modeling",
-      "formalization",
-      "specification",
-      "optimization"
+      "strategy",
+      "meta"
     ],
     "requires": [],
     "user-invocable": true,
-    "trigger": "/skill-modeler"
+    "trigger": "/prompt-modeler"
   }
 ]
