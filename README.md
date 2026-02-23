@@ -66,7 +66,10 @@ See [SKILL_SPEC.md](SKILL_SPEC.md) to write your own skills.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). Skill requests via issues, community sharing via Discussions.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide.
+🇧🇷 Alunos e colaboradores brasileiros: veja o [CONTRIBUTING.pt-br.md](CONTRIBUTING.pt-br.md) com passo a passo em português.
+
+Skill requests via issues, community sharing via Discussions.
 
 ---
 
