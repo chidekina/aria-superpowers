@@ -217,5 +217,14 @@
     "requires": ["java"],
     "user-invocable": true,
     "trigger": "/java-boilerplate"
+  },
+  {
+    "name": "react-antd-setup",
+    "description": "Gera a estrutura completa de um projeto ReactJS configurado e pronto para usar Ant Design",
+    "category": "frontend",
+    "tags": ["automation", "automation", "react"],
+    "requires": ["react"],
+    "user-invocable": true,
+    "trigger": "/react-antd-setup"
   }
 ]
