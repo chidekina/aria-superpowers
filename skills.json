@@ -187,5 +187,23 @@
     "requires": [],
     "user-invocable": true,
     "trigger": "/token-saver"
+  },
+  {
+    "name": "zod",
+    "description": "Zod type provider",
+    "category": "Backend",
+    "tags": ["zod", "database", "cost"],
+    "requires": [],
+    "user-invocable": true,
+    "trigger": null
+  },
+  {
+    "name": "Tailwindcss",
+    "description": "ting interfaces adaptable to mobile,desktop and tablet ",
+    "category": "Frontend",
+    "tags": ["Css", "design"],
+    "requires": [],
+    "user-invocable": true,
+    "trigger": "/shadcn-ui"
   }
 ]
