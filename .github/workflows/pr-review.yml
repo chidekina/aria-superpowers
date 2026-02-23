@@ -17,9 +17,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          # Explicitly checks out base branch — NOT the fork's code.
-          # This ensures .github/scripts/review-pr.js is always trusted.
-          ref: ${{ github.event.pull_request.base.sha }}
+          # Checks out the base branch HEAD — NOT the fork's code.
+          # This ensures .github/scripts/review-pr.js is always the trusted version.
+          ref: ${{ github.event.pull_request.base.ref }}
 
       - name: Save trusted review script
         run: cp .github/scripts/review-pr.js /tmp/trusted-review-pr.js
