@@ -195,6 +195,24 @@
     "tags": [ "prompt-engineering", "strategy", "meta", "utilities"],
     "requires": [],
     "user-invocable": true,
-    "trigger": "/prompt-modeler"
+    "trigger": "/java-boilerplate"
+  },
+  {
+    "name": "react-antd-setup",
+    "description": "Gera a estrutura completa de um projeto ReactJS configurado e pronto para usar Ant Design",
+    "category": "frontend",
+    "tags": ["automation", "react"],
+    "requires": ["react"],
+    "user-invocable": true,
+    "trigger": "/react-antd-setup"
+  },
+  {
+  "name": "prompt-modeler",
+  "description": "Generate structured strategic prompts with diagnostic and multiple options.",
+  "category": "utilities",
+  "tags": ["prompt-engineering", "strategy", "meta", "utilities"],
+  "requires": [],
+  "user-invocable": true,
+  "trigger": "/prompt-modeler"
   }
 ]
