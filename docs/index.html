@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ARIA Superpowers — Claude Code Skills</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: system-ui, -apple-system, sans-serif; background: #0d1117; color: #e6edf3; min-height: 100vh; }
@@ -22,8 +23,8 @@
     .filter-btn { background: #21262d; border: 1px solid #30363d; border-radius: 20px; padding: 0.3rem 0.8rem; color: #8b949e; font-size: 0.8rem; cursor: pointer; transition: all 0.15s; }
     .filter-btn.active, .filter-btn:hover { background: #1f6feb; border-color: #1f6feb; color: #fff; }
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; padding: 0 2rem 3rem; max-width: 1200px; margin: 0 auto; }
-    .card { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 1.2rem; transition: border-color 0.15s; }
-    .card:hover { border-color: #58a6ff; }
+    .card { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 1.2rem; transition: border-color 0.15s, transform 0.15s; cursor: pointer; }
+    .card:hover { border-color: #58a6ff; transform: translateY(-2px); }
     .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.6rem; }
     .card-name { font-weight: 600; font-size: 1rem; color: #79c0ff; font-family: monospace; }
     .card-trigger { background: #0d419d; color: #79c0ff; border-radius: 4px; padding: 0.15rem 0.4rem; font-size: 0.75rem; font-family: monospace; white-space: nowrap; }
@@ -37,14 +38,43 @@
     footer a { color: #58a6ff; text-decoration: none; }
     .count { color: #484f58; font-size: 0.8rem; padding: 0 2rem; max-width: 1200px; margin: 0 auto 0.5rem; }
 
-    /* Modal */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; padding: 1rem; }
+    /* Overlay shared */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 100; align-items: center; justify-content: center; padding: 1rem; }
     .modal-overlay.open { display: flex; }
-    .modal { background: #161b22; border: 1px solid #30363d; border-radius: 12px; width: 100%; max-width: 620px; max-height: 90vh; overflow-y: auto; padding: 1.75rem; position: relative; }
+    .modal-close { background: none; border: none; color: #8b949e; font-size: 1.3rem; cursor: pointer; line-height: 1; padding: 0.2rem 0.4rem; border-radius: 4px; flex-shrink: 0; }
+    .modal-close:hover { background: #21262d; color: #e6edf3; }
+
+    /* Skill detail modal */
+    .skill-modal { background: #161b22; border: 1px solid #30363d; border-radius: 12px; width: 100%; max-width: 760px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; }
+    .skill-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 1.25rem 1.5rem; border-bottom: 1px solid #21262d; gap: 1rem; flex-shrink: 0; }
+    .skill-modal-meta { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+    .skill-modal-name { font-weight: 700; font-size: 1.1rem; color: #79c0ff; font-family: monospace; }
+    .skill-modal-body { padding: 1.5rem; overflow-y: auto; flex: 1; }
+    .skill-modal-footer { display: flex; justify-content: flex-end; gap: 0.75rem; padding: 1rem 1.5rem; border-top: 1px solid #21262d; flex-shrink: 0; }
+    .skill-loading { color: #8b949e; font-size: 0.9rem; text-align: center; padding: 3rem; }
+    .skill-error { color: #f85149; font-size: 0.85rem; text-align: center; padding: 2rem; }
+    /* Markdown content styles */
+    .md h1, .md h2, .md h3 { color: #e6edf3; margin: 1.2rem 0 0.5rem; font-size: 1rem; }
+    .md h1 { font-size: 1.15rem; border-bottom: 1px solid #21262d; padding-bottom: 0.4rem; }
+    .md h2 { font-size: 1rem; color: #79c0ff; }
+    .md h3 { font-size: 0.95rem; }
+    .md p { color: #8b949e; font-size: 0.88rem; line-height: 1.65; margin-bottom: 0.75rem; }
+    .md ul, .md ol { color: #8b949e; font-size: 0.88rem; line-height: 1.65; padding-left: 1.4rem; margin-bottom: 0.75rem; }
+    .md li { margin-bottom: 0.2rem; }
+    .md code { background: #0d1117; border: 1px solid #30363d; border-radius: 4px; padding: 0.1rem 0.35rem; font-family: monospace; font-size: 0.82rem; color: #79c0ff; }
+    .md pre { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 1rem; overflow-x: auto; margin-bottom: 0.75rem; }
+    .md pre code { background: none; border: none; padding: 0; color: #e6edf3; font-size: 0.82rem; }
+    .md a { color: #58a6ff; text-decoration: none; }
+    .md a:hover { text-decoration: underline; }
+    .md hr { border: none; border-top: 1px solid #21262d; margin: 1rem 0; }
+    .md blockquote { border-left: 3px solid #30363d; padding-left: 1rem; color: #8b949e; margin-bottom: 0.75rem; }
+    /* hide frontmatter block */
+    .md .frontmatter { display: none; }
+
+    /* Submit modal */
+    .submit-modal { background: #161b22; border: 1px solid #30363d; border-radius: 12px; width: 100%; max-width: 620px; max-height: 90vh; overflow-y: auto; padding: 1.75rem; }
     .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
     .modal-header h3 { font-size: 1.1rem; font-weight: 700; }
-    .modal-close { background: none; border: none; color: #8b949e; font-size: 1.3rem; cursor: pointer; line-height: 1; padding: 0.2rem 0.4rem; border-radius: 4px; }
-    .modal-close:hover { background: #21262d; color: #e6edf3; }
     .modal-subtitle { font-size: 0.82rem; color: #8b949e; margin-bottom: 1.25rem; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
     .form-group { display: flex; flex-direction: column; gap: 0.3rem; margin-bottom: 1rem; }
@@ -58,6 +88,8 @@
     .btn-cancel:hover { border-color: #8b949e; color: #e6edf3; }
     .btn-open-gh { background: #238636; border: none; border-radius: 6px; padding: 0.55rem 1.2rem; color: #fff; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: background 0.15s; }
     .btn-open-gh:hover { background: #2ea043; }
+    .btn-gh-link { background: none; border: 1px solid #30363d; border-radius: 6px; padding: 0.45rem 0.9rem; color: #8b949e; font-size: 0.82rem; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 0.3rem; }
+    .btn-gh-link:hover { border-color: #8b949e; color: #e6edf3; }
     .lang-toggle { display: flex; background: #0d1117; border: 1px solid #30363d; border-radius: 6px; overflow: hidden; }
     .lang-btn { background: none; border: none; padding: 0.3rem 0.65rem; color: #8b949e; font-size: 0.78rem; cursor: pointer; transition: all 0.15s; }
     .lang-btn.active { background: #21262d; color: #e6edf3; }
@@ -72,7 +104,7 @@
       git clone https://github.com/chidekina/aria-superpowers.git && ./aria-superpowers/install.sh
     </code>
     <div class="header-actions">
-      <button class="btn-submit" onclick="openModal()">✨ Submit a skill</button>
+      <button class="btn-submit" onclick="openSubmitModal()">✨ Submit a skill</button>
     </div>
   </header>
 
@@ -89,9 +121,23 @@
     CC BY 4.0 · Built for <a href="https://claude.ai/claude-code">Claude Code</a>
   </footer>
 
+  <!-- Skill Detail Modal -->
+  <div class="modal-overlay" id="skillOverlay" onclick="handleSkillOverlayClick(event)">
+    <div class="skill-modal">
+      <div class="skill-modal-header">
+        <div class="skill-modal-meta" id="skillModalMeta"></div>
+        <button class="modal-close" onclick="closeSkillModal()">✕</button>
+      </div>
+      <div class="skill-modal-body">
+        <div class="md" id="skillModalContent"></div>
+      </div>
+      <div class="skill-modal-footer" id="skillModalFooter"></div>
+    </div>
+  </div>
+
   <!-- Submit Modal -->
-  <div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
-    <div class="modal">
+  <div class="modal-overlay" id="submitOverlay" onclick="handleSubmitOverlayClick(event)">
+    <div class="submit-modal">
       <div class="modal-header">
         <h3>✨ Submit a Skill</h3>
         <div style="display:flex;align-items:center;gap:0.5rem;">
@@ -99,7 +145,7 @@
             <button id="lang-en" class="lang-btn active" onclick="setLang('en')">🇺🇸 EN</button>
             <button id="lang-pt" class="lang-btn" onclick="setLang('pt')">🇧🇷 PT</button>
           </div>
-          <button class="modal-close" onclick="closeModal()">✕</button>
+          <button class="modal-close" onclick="closeSubmitModal()">✕</button>
         </div>
       </div>
       <p class="modal-subtitle" id="modal-subtitle-en">Fill in the details and click "Open on GitHub" — a pre-filled issue will open. You'll need a GitHub account to submit. Need help? See the <a href="https://github.com/chidekina/aria-superpowers/blob/main/CONTRIBUTING.md" target="_blank" style="color:#58a6ff">Contributing guide</a>.</p>
@@ -162,7 +208,7 @@ user-invocable: true
       </div>
 
       <div class="modal-footer">
-        <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        <button class="btn-cancel" onclick="closeSubmitModal()">Cancel</button>
         <button class="btn-open-gh" onclick="openIssue()">Open on GitHub →</button>
       </div>
     </div>
@@ -216,7 +262,7 @@ user-invocable: true
       }
 
       grid.innerHTML = filtered.map(s => `
-        <div class="card">
+        <div class="card" onclick="openSkillModal(${JSON.stringify(s).replace(/"/g, '&quot;')})">
           <div class="card-header">
             <span class="card-name">${s.name}</span>
             ${s.trigger
@@ -230,13 +276,70 @@ user-invocable: true
       `).join('');
     }
 
-    function copyInstall(el) {
-      navigator.clipboard.writeText('git clone https://github.com/chidekina/aria-superpowers.git && ./aria-superpowers/install.sh').then(() => {
-        const orig = el.textContent;
-        el.textContent = '✅ Copied!';
-        setTimeout(() => el.textContent = orig, 1500);
-      });
+    // --- Skill detail modal ---
+
+    async function openSkillModal(skill) {
+      const overlay = document.getElementById('skillOverlay');
+      const content = document.getElementById('skillModalContent');
+      const meta = document.getElementById('skillModalMeta');
+      const footer = document.getElementById('skillModalFooter');
+
+      meta.innerHTML = `
+        <span class="skill-modal-name">${skill.name}</span>
+        ${skill.trigger ? `<span class="card-trigger">${skill.trigger}</span>` : '<span class="card-auto">auto</span>'}
+        ${skill.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+      `;
+
+      const ghUrl = `https://github.com/chidekina/aria-superpowers/blob/main/skills/${skill.name}/SKILL.md`;
+      footer.innerHTML = `
+        <a class="btn-gh-link" href="${ghUrl}" target="_blank">View on GitHub ↗</a>
+      `;
+
+      content.innerHTML = '<div class="skill-loading">Loading...</div>';
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+
+      try {
+        const rawUrl = `https://raw.githubusercontent.com/chidekina/aria-superpowers/main/skills/${skill.name}/SKILL.md`;
+        const res = await fetch(rawUrl);
+        if (!res.ok) throw new Error('Not found');
+        const md = await res.text();
+        // Strip frontmatter before rendering
+        const stripped = md.replace(/^---[\s\S]*?---\n/, '');
+        content.innerHTML = marked.parse(stripped);
+      } catch {
+        content.innerHTML = '<div class="skill-error">Could not load skill content.</div>';
+      }
     }
+
+    function closeSkillModal() {
+      document.getElementById('skillOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function handleSkillOverlayClick(e) {
+      if (e.target === document.getElementById('skillOverlay')) closeSkillModal();
+    }
+
+    // --- Submit modal ---
+
+    function openSubmitModal() {
+      document.getElementById('submitOverlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeSubmitModal() {
+      document.getElementById('submitOverlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+
+    function handleSubmitOverlayClick(e) {
+      if (e.target === document.getElementById('submitOverlay')) closeSubmitModal();
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { closeSkillModal(); closeSubmitModal(); }
+    });
 
     function setLang(lang) {
       document.getElementById('modal-subtitle-en').style.display = lang === 'en' ? '' : 'none';
@@ -245,21 +348,13 @@ user-invocable: true
       document.getElementById('lang-pt').classList.toggle('active', lang === 'pt');
     }
 
-    function openModal() {
-      document.getElementById('modalOverlay').classList.add('open');
-      document.body.style.overflow = 'hidden';
+    function copyInstall(el) {
+      navigator.clipboard.writeText('git clone https://github.com/chidekina/aria-superpowers.git && ./aria-superpowers/install.sh').then(() => {
+        const orig = el.textContent;
+        el.textContent = '✅ Copied!';
+        setTimeout(() => el.textContent = orig, 1500);
+      });
     }
-
-    function closeModal() {
-      document.getElementById('modalOverlay').classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    function handleOverlayClick(e) {
-      if (e.target === document.getElementById('modalOverlay')) closeModal();
-    }
-
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
     function openIssue() {
       const name = document.getElementById('f-name').value.trim();
