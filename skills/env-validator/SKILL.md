@@ -1,40 +1,99 @@
 ---
 name: env-validator
-description: "Valida se todas as variáveis do .env.example estão presentes e preenchidas no .env. Triggers on: env-validator check, validar env, checar variáveis de ambiente."
+description: "Validates that all variables declared in .env.example are present and non-empty in .env. Triggers on: validate env, check env, missing env vars, /env-validator."
 user-invocable: true
-tags: [env, dotenv, validator, cli, devtools]
-requires: [node>=18]
+tags: [env, dotenv, devops, cli]
 ---
 
 # env-validator
 
-Valida arquivos `.env` contra um `.env.example`, garantindo que nenhuma variável obrigatória esteja faltando ou vazia.
+Validate that your `.env` file has all the variables declared in `.env.example` before starting the app or running CI/CD pipelines.
 
 ---
 
-## Uso
+## Usage
 
 ```
-env-validator check                                        # Validação básica
-env-validator check --env .env.local --example .env.example  # Arquivos customizados
-env-validator check --json                                 # Saída em JSON para CI/scripts
-env-validator check --no-strict                            # Avisa sem falhar o processo
-env-validator check --allow-empty                          # Aceita variáveis com valor vazio
+/env-validator                        # Validate .env against .env.example
+/env-validator --allow-empty          # Accept keys with empty values (KEY=)
+/env-validator --no-strict            # Warn only, don't fail the process
+/env-validator --env .env.local       # Use a custom .env file
 ```
 
-## O que ela faz
+---
 
-- Passo 1: Lê o `.env.example` como fonte da verdade e extrai todas as chaves declaradas
-- Passo 2: Lê o `.env` e extrai as chaves presentes com seus respectivos valores
-- Passo 3: Compara os dois arquivos e identifica chaves ausentes e chaves sem valor
-- Passo 4: Retorna uma mensagem legível ou JSON com o resultado e encerra com o exit code correto
+## Workflow
 
-## Exemplo
+1. **Read `.env.example`** as the source of truth — every key declared there must exist in `.env`:
+   ```bash
+   cat .env.example
+   ```
+
+2. **Read `.env`** and extract all present keys and values:
+   ```bash
+   cat .env
+   ```
+
+3. **Compare the two files** and identify:
+   - Keys **absent** from `.env` → report as missing
+   - Keys **present but empty** (`KEY=`) → report as empty (unless `--allow-empty`)
+   - Extra keys in `.env` not in `.env.example` → ignore
+
+4. **Report results** clearly:
+   - ✅ All keys present and filled → OK
+   - ❌ Missing or empty keys → list them with a hint to check `.env.example`
+
+5. **Exit with the correct code:**
+   - `0` = OK
+   - `1` = missing or empty variables (strict mode)
+   - `2` = file not found
+
+---
+
+## Examples
 
 **Prompt:**
-> env-validator check
+> /env-validator
 
-**O Claude vai:**
-1. Ler o `.env.example` e mapear todas as variáveis esperadas
-2. Ler o `.env` e comparar com as variáveis esperadas
-3. Entregar um relatório indicando o que está faltando, o que está vazio e o exit code para o CI/CD
+**`.env.example`:**
+```
+DATABASE_URL=
+JWT_SECRET=
+API_KEY=
+```
+
+**`.env`:**
+```
+DATABASE_URL=postgres://localhost
+JWT_SECRET=minha-senha
+```
+
+**Claude will respond:**
+```
+❌ Variáveis ausentes no .env:
+   - API_KEY
+
+   Dica: confira o .env.example e preencha os valores.
+```
+
+---
+
+**Prompt:**
+> /env-validator --allow-empty
+
+**Claude will respond:**
+```
+✅ .env está OK — nenhuma variável faltando.
+```
+
+---
+
+## Rules
+
+- `.env.example` is always the source of truth — never the other way around
+- Keys with empty values (`KEY=`) are invalid by default; use `--allow-empty` to accept them
+- Extra keys in `.env` that don't exist in `.env.example` are not an error
+- Supports both `UPPER_CASE` and `lower_case` key formats
+- Ignores comment lines (`#`) and blank lines
+- Supports `export KEY=value` syntax
+- Handles Windows-saved files (BOM)
