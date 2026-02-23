@@ -226,5 +226,14 @@
     "requires": ["react"],
     "user-invocable": true,
     "trigger": "/react-antd-setup"
+  },
+  {
+    "name": "prompt-modeler",
+    "description": "Generate structured strategic prompts with diagnostic and multiple options.",
+    "category": "utilities",
+    "tags": ["prompt-engineering", "strategy"],
+    "requires": [],
+    "user-invocable": true,
+    "trigger": "/prompt-modeler"
   }
 ]
