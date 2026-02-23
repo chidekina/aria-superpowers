@@ -21,6 +21,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+      pull-requests: write
+      issues: write
     steps:
       - uses: actions/checkout@v4
 
