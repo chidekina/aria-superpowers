@@ -208,12 +208,13 @@
   ],
   "user-invocable": true,
   "trigger": "/test"
-}
+},
+  {
     "name": "java-boilerplate",
     "description": "Gera automaticamente getters, setters, construtores, toString, equals e hashCode para classes Java",
     "category": "backend",
-    "tags": ["automation"],
-    "requires": ["java"],
+    "tags": "automation",
+    "requires": "java",
     "user-invocable": true,
     "trigger": "/java-boilerplate"
   }
