@@ -187,5 +187,23 @@
     "requires": [],
     "user-invocable": true,
     "trigger": "/token-saver"
+  },
+    {
+    "name": "Designer",
+    "description": "Designer adptable to mobile, tablet e desktop with cline conventional messages",
+    "category": "git",
+    "tags": ["git", "tailwindcss", "automation"],
+    "requires": ["tailwindcss"],
+    "user-invocable": true,
+    "trigger": "/commit"
+  },
+  {
+     "name": "Zod-types-provider",
+    "description": "zod validation, condition data, and mapped types",
+    "category": "backend",
+    "tags": ["typescript", "types"],
+    "requires": [],
+    "user-invocable": false,
+    "trigger": null
   }
 ]
