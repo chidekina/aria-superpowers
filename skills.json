@@ -205,5 +205,51 @@
     "requires": [],
     "user-invocable": true,
     "trigger": "/shadcn-ui"
+  "name": "generate-tests",
+  "description": "Gera automaticamente testes unitários ou de integração para projetos JavaScript e TypeScript com Jest ou Vitest, incluindo mocks inteligentes e suporte a meta de cobertura.",
+  "category": "testing",
+  "tags": [
+    "javascript",
+    "typescript",
+    "jest",
+    "vitest",
+    "testing",
+    "qa",
+    "automation",
+    "coverage"
+  ],
+  "requires": [
+    "node",
+    "jest|vitest"
+  ],
+  "user-invocable": true,
+  "trigger": "/test"
+},
+  {
+    "name": "java-boilerplate",
+    "description": "Gera automaticamente getters, setters, construtores, toString, equals e hashCode para classes Java",
+    "category": "backend",
+    "tags": ["automation"],
+    "requires": ["java"],
+    "user-invocable": true,
+    "trigger": "/java-boilerplate"
+  },
+  {
+    "name": "react-antd-setup",
+    "description": "Gera a estrutura completa de um projeto ReactJS configurado e pronto para usar Ant Design",
+    "category": "frontend",
+    "tags": ["automation", "react"],
+    "requires": ["react"],
+    "user-invocable": true,
+    "trigger": "/react-antd-setup"
+  },
+  {
+    "name": "prompt-modeler",
+    "description": "Generate structured strategic prompts with diagnostic and multiple options.",
+    "category": "utilities",
+    "tags": ["prompt-engineering", "strategy"],
+    "requires": [],
+    "user-invocable": true,
+    "trigger": "/prompt-modeler"
   }
 ]
