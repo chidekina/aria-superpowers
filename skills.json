@@ -222,7 +222,7 @@
     "name": "react-antd-setup",
     "description": "Gera a estrutura completa de um projeto ReactJS configurado e pronto para usar Ant Design",
     "category": "frontend",
-    "tags": ["automation", "automation", "react"],
+    "tags": ["automation", "react"],
     "requires": ["react"],
     "user-invocable": true,
     "trigger": "/react-antd-setup"
