@@ -1,0 +1,191 @@
+[
+  {
+    "name": "commit",
+    "description": "Smart commits with Ollama-generated conventional messages",
+    "category": "git",
+    "tags": ["git", "ollama", "automation"],
+    "requires": ["ollama"],
+    "user-invocable": true,
+    "trigger": "/commit"
+  },
+  {
+    "name": "code-reviewer",
+    "description": "Structured code review with security and quality checks",
+    "category": "quality",
+    "tags": ["review", "quality", "security"],
+    "requires": [],
+    "user-invocable": true,
+    "trigger": "/code-reviewer"
+  },
+  {
+    "name": "test-gen",
+    "description": "Generate test cases from type constraints and specs",
+    "category": "quality",
+    "tags": ["testing", "tdd"],
+    "requires": [],
+    "user-invocable": true,
+    "trigger": "/test-gen"
+  },
+  {
+    "name": "qa",
+    "description": "QA specialist for smoke testing production deployments",
+    "category": "quality",
+    "tags": ["testing", "playwright", "e2e"],
+    "requires": ["playwright"],
+    "user-invocable": true,
+    "trigger": "/qa"
+  },
+  {
+    "name": "prd",
+    "description": "Generate Product Requirements Documents for new features",
+    "category": "planning",
+    "tags": ["planning", "product", "docs"],
+    "requires": [],
+    "user-invocable": true,
+    "trigger": "/prd"
+  },
+  {
+    "name": "spec",
+    "description": "Convert PRD or requirements into structured YAML spec",
+    "category": "planning",
+    "tags": ["planning", "spec", "yaml"],
+    "requires": [],
+    "user-invocable": true,
+    "trigger": "/spec"
+  },
+  {
+    "name": "skill-creator",
+    "description": "Guide for creating new skills that extend Claude's capabilities",
+    "category": "planning",
+    "tags": ["meta", "skills"],
+    "requires": [],
+    "user-invocable": true,
+    "trigger": "/skill-creator"
+  },
+  {
+    "name": "frontend-design",
+    "description": "Create distinctive, production-grade frontend interfaces",
+    "category": "frontend",
+    "tags": ["ui", "design", "html", "css"],
+    "requires": [],
+    "user-invocable": false,
+    "trigger": null
+  },
+  {
+    "name": "react-dev",
+    "description": "React components with TypeScript, hooks, and best practices",
+    "category": "frontend",
+    "tags": ["react", "typescript", "components"],
+    "requires": [],
+    "user-invocable": true,
+    "trigger": "/react-dev"
+  },
+  {
+    "name": "shadcn-ui",
+    "description": "Complete shadcn/ui component library guide",
+    "category": "frontend",
+    "tags": ["react", "shadcn", "ui-components"],
+    "requires": [],
+    "user-invocable": true,
+    "trigger": "/shadcn-ui"
+  },
+  {
+    "name": "typescript-advanced-types",
+    "description": "Master TypeScript generics, conditional types, and mapped types",
+    "category": "backend",
+    "tags": ["typescript", "types"],
+    "requires": [],
+    "user-invocable": false,
+    "trigger": null
+  },
+  {
+    "name": "api-design-principles",
+    "description": "REST and GraphQL API design principles for scalable APIs",
+    "category": "backend",
+    "tags": ["api", "rest", "graphql", "design"],
+    "requires": [],
+    "user-invocable": true,
+    "trigger": "/api-design-principles"
+  },
+  {
+    "name": "postgresql-table-design",
+    "description": "PostgreSQL schema design with best-practices and indexing",
+    "category": "backend",
+    "tags": ["postgresql", "database", "schema"],
+    "requires": [],
+    "user-invocable": true,
+    "trigger": "/postgresql-table-design"
+  },
+  {
+    "name": "nodejs-backend-patterns",
+    "description": "Production-ready Node.js backend patterns with Express/Fastify",
+    "category": "backend",
+    "tags": ["nodejs", "backend", "express", "fastify"],
+    "requires": [],
+    "user-invocable": false,
+    "trigger": null
+  },
+  {
+    "name": "mcp-builder",
+    "description": "Guide for creating high-quality MCP servers for Claude",
+    "category": "tooling",
+    "tags": ["mcp", "claude-code", "tools"],
+    "requires": [],
+    "user-invocable": true,
+    "trigger": "/mcp-builder"
+  },
+  {
+    "name": "turborepo",
+    "description": "Turborepo monorepo build system guidance",
+    "category": "tooling",
+    "tags": ["monorepo", "turborepo", "build"],
+    "requires": [],
+    "user-invocable": false,
+    "trigger": null
+  },
+  {
+    "name": "pdf",
+    "description": "PDF manipulation: extract, create, merge, and analyze",
+    "category": "utilities",
+    "tags": ["pdf", "documents"],
+    "requires": [],
+    "user-invocable": true,
+    "trigger": "/pdf"
+  },
+  {
+    "name": "pptx",
+    "description": "Presentation creation, editing, and analysis",
+    "category": "utilities",
+    "tags": ["presentations", "pptx", "office"],
+    "requires": [],
+    "user-invocable": true,
+    "trigger": "/pptx"
+  },
+  {
+    "name": "docx",
+    "description": "Document creation with support for tracked changes and comments",
+    "category": "utilities",
+    "tags": ["documents", "docx", "office"],
+    "requires": [],
+    "user-invocable": true,
+    "trigger": "/docx"
+  },
+  {
+    "name": "webapp-testing",
+    "description": "Interact with and test local web applications using Playwright",
+    "category": "utilities",
+    "tags": ["testing", "playwright", "browser"],
+    "requires": ["playwright"],
+    "user-invocable": true,
+    "trigger": "/webapp-testing"
+  },
+  {
+    "name": "token-saver",
+    "description": "Token optimization guide for Claude Code sessions",
+    "category": "utilities",
+    "tags": ["optimization", "tokens", "cost"],
+    "requires": [],
+    "user-invocable": true,
+    "trigger": "/token-saver"
+  }
+]

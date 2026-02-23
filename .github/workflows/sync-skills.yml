@@ -1,0 +1,26 @@
+name: Sync skills.json to docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - skills.json
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Copy skills.json to docs/
+        run: cp skills.json docs/skills.json
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/skills.json
+          git diff --cached --quiet || git commit -m "chore: sync skills.json to docs [skip ci]"
+          git push

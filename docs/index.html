@@ -40,7 +40,7 @@
     <h1>⚡ ARIA Superpowers</h1>
     <p>Curated Claude Code skills — drop-in behaviors for your AI assistant</p>
     <code class="install-hint" title="Click to copy" onclick="copyInstall(this)">
-      git clone https://github.com/cesaraethos/aria-superpowers.git && ./aria-superpowers/install.sh
+      git clone https://github.com/chidekina/aria-superpowers.git && ./aria-superpowers/install.sh
     </code>
   </header>
 
@@ -52,8 +52,8 @@
   <div class="grid" id="grid"></div>
 
   <footer>
-    <a href="https://github.com/cesaraethos/aria-superpowers">GitHub</a> ·
-    <a href="https://github.com/cesaraethos/aria-superpowers/blob/main/SKILL_SPEC.md">Write a Skill</a> ·
+    <a href="https://github.com/chidekina/aria-superpowers">GitHub</a> ·
+    <a href="https://github.com/chidekina/aria-superpowers/blob/main/SKILL_SPEC.md">Write a Skill</a> ·
     CC BY 4.0 · Built for <a href="https://claude.ai/claude-code">Claude Code</a>
   </footer>
 
@@ -63,7 +63,7 @@
 
     async function load() {
       try {
-        const res = await fetch('../skills.json');
+        const res = await fetch('./skills.json');
         skills = await res.json();
       } catch {
         // fallback for local dev
@@ -121,7 +121,7 @@
     }
 
     function copyInstall(el) {
-      navigator.clipboard.writeText('git clone https://github.com/cesaraethos/aria-superpowers.git && ./aria-superpowers/install.sh').then(() => {
+      navigator.clipboard.writeText('git clone https://github.com/chidekina/aria-superpowers.git && ./aria-superpowers/install.sh').then(() => {
         const orig = el.textContent;
         el.textContent = '✅ Copied!';
         setTimeout(() => el.textContent = orig, 1500);
